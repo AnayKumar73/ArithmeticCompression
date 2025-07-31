@@ -1,6 +1,6 @@
-#include "arithmetic_encoder.cc"
-#include "arithmetic_decoder.cc"
-#include "probability_model.cc"
+#include "arithmetic_encoder.h"
+#include "arithmetic_decoder.h"
+#include "probability_model.h"
 #include <fstream>
 #include <iostream>
 

@@ -10,37 +10,15 @@
 class ProbabilityModel {
 public:
 
-    ProbabilityModel(const std::string& data) {
-        for (char c : data) {
-            frequencies_[c]++;
-            symbols_.push_back(c);
-        }
+    ProbabilityModel(const std::string& data);
 
-        total_ = 0;
-        for (const auto& [c ,count] : frequencies_) {
-            cumulative_[c] = total_;
-            total_ += count;
-        }
-        std::sort(symbols_.begin(), symbols_.end(), [&](char a, char b) {
-            return cumulative_[a] < cumulative_[b];
-        });
-    }
+    int getFrequency(char c) const;
 
-    int getFrequency(char c) const {
-        return frequencies_.at(c);
-    }
+    int getCumulative(char c) const;
 
-    int getCumulative(char c) const {
-       return cumulative_.at(c);
-    }
+    int getTotal() const;
 
-    int getTotal() const {
-        return total_;
-    }
-
-    std::vector<char> getSymbols() const {
-        return symbols_;
-    }
+    std::vector<char> getSymbols() const;
 
 private:
     std::unordered_map<char, int> frequencies_;
