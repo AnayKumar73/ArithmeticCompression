@@ -4,6 +4,9 @@ ArithmeticEncoder::ArithmeticEncoder(std::ostream& out) : low_{0}, high_{TOP}, u
 
 void ArithmeticEncoder::encode(const std::string& message, const ProbabilityModel& model) {
     for(char c : message) {
+        if(c == '$') {
+            break;
+        }
         encodeSymbol(c, model);
     }
     finish();
@@ -53,6 +56,7 @@ void ArithmeticEncoder::outputBit(int bit) {
     buffer_ <<= 1;
     buffer_ = buffer_ | (bit & 1);
     bitsFilled_++;
+    // std::cout << bit;
     if (bitsFilled_ == 8) {
         output_.put(static_cast<char>(buffer_));
         bitsFilled_ = 0;

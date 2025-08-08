@@ -5,7 +5,7 @@
 #include <iostream>
 
 int main() {
-    std::string message = "hello$";  // Make sure to include EOF symbol, e.g. '$'
+    std::string message = "abcdef$";  // Make sure to include EOF symbol, e.g. '$'
 
     // Build model from the message (for simplicity)
     ProbabilityModel model(message);

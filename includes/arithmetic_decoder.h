@@ -16,16 +16,16 @@ public:
     
 
 private:
-    const uint32_t TOP = 0xFFFFFFFF; //0b111... 
-    const uint32_t HALF = 0x80000000; //equivalent to 0b1000...
-    const uint32_t QUARTER = 0x40000000; //equivalent to 0b01000...
+    static constexpr uint64_t TOP = 0xFFFFFFFF; //0b111... 
+    static constexpr uint64_t HALF = 0x80000000; //equivalent to 0b1000...
+    static constexpr uint64_t QUARTER = 0x40000000; //equivalent to 0b01000...
 
     std::istream& input_;
     const ProbabilityModel& model_;
 
-    uint32_t low_;
-    uint32_t high_;
-    uint32_t value_;
+    uint64_t low_;
+    uint64_t high_;
+    uint64_t value_;
 
 
     uint8_t buffer_;

@@ -1,19 +1,17 @@
 #include "probability_model.h"
 
 ProbabilityModel::ProbabilityModel(const std::string& data) {
-        for (char c : data) {
-            frequencies_[c]++;
+    for (char c : data) {
+        frequencies_[c]++;
+        if(std::find(symbols_.begin(), symbols_.end(), c) == symbols_.end()) {
             symbols_.push_back(c);
         }
-
-        total_ = 0;
-        for (const auto& [c ,count] : frequencies_) {
-            cumulative_[c] = total_;
-            total_ += count;
-        }
-        std::sort(symbols_.begin(), symbols_.end(), [&](char a, char b) {
-            return cumulative_[a] < cumulative_[b];
-        });
+    }
+    total_ = 0;
+    for (char c : symbols_) {
+        cumulative_[c] = total_;
+        total_ += frequencies_[c];
+    }
 }
 
 int ProbabilityModel::getFrequency(char c) const {
