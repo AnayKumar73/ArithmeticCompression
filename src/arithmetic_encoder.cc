@@ -4,10 +4,10 @@ ArithmeticEncoder::ArithmeticEncoder(std::ostream& out) : low_{0}, high_{TOP}, u
 
 void ArithmeticEncoder::encode(const std::string& message, const ProbabilityModel& model) {
     for(char c : message) {
+        encodeSymbol(c, model);
         if(c == '$') {
             break;
         }
-        encodeSymbol(c, model);
     }
     finish();
 }
@@ -15,17 +15,19 @@ void ArithmeticEncoder::encode(const std::string& message, const ProbabilityMode
 void ArithmeticEncoder::encodeSymbol(char c, const ProbabilityModel& model) {
     int total = model.getTotal();
     uint64_t range = static_cast<uint64_t>(high_) - low_ + 1; //Cast to 64bit to prevent overflow (range is already 32 bits)
-    low_ = low_ + static_cast<uint32_t>((range * model.getCumulative(c)) / total);
-    high_ = low_ + static_cast<uint32_t>((range * model.getFrequency(c)) / total) - 1;
+    uint32_t new_low = low_ + static_cast<uint32_t>((range * model.getCumulative(c)) / total);
+    uint32_t new_high = low_ + static_cast<uint32_t>((range * (model.getCumulative(c) + model.getFrequency(c))) / total) - 1;
+    low_ = new_low;
+    high_ = new_high;
 
     while(true) {
         if((low_ & HALF) == (high_ & HALF)) {
             outputBit(low_ >> 31);
-            flushUnderflowBits(1 - (low_ >> 31)); //flush opposite bits
-        } else if ((low_ & HALF) && !(high_ & HALF)) {
+            flushUnderflowBits(1 - (low_ >> 31));
+        } else if (low_ >= QUARTER && high_ < 3*QUARTER) {
             underflowBits_++;
-            low_ &= ~HALF;
-            high_ |= QUARTER;
+            low_ ^= QUARTER;
+            high_ ^= QUARTER;
         } else {
             break;
         }
